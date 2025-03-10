@@ -23,11 +23,21 @@ const App = () => {
       } else {
         setResult(
           <div>
-            <p><strong>CEP:</strong> {data.cep}</p>
-            <p><strong>Logradouro:</strong> {data.logradouro}</p>
-            <p><strong>Bairro:</strong> {data.bairro}</p>
-            <p><strong>Cidade:</strong> {data.localidade}</p>
-            <p><strong>Estado:</strong> {data.uf}</p>
+            <p>
+              <strong>CEP:</strong> {data.cep}
+            </p>
+            <p>
+              <strong>Logradouro:</strong> {data.logradouro}
+            </p>
+            <p>
+              <strong>Bairro:</strong> {data.bairro}
+            </p>
+            <p>
+              <strong>Cidade:</strong> {data.localidade}
+            </p>
+            <p>
+              <strong>Estado:</strong> {data.uf}
+            </p>
           </div>
         );
       }
