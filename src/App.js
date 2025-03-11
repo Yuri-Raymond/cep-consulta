@@ -57,7 +57,7 @@ function App() {
           {dados && (
             <div className="resultado">
               <p><strong>CEP:</strong> {dados.cep}</p>
-              <p><strong>Logradouro:</strong> {dados.street}</p>
+              <p><strong>Rua:</strong> {dados.street}</p>
               <p><strong>Bairro:</strong> {dados.neighborhood}</p>
               <p><strong>Cidade:</strong> {dados.city}</p>
               <p><strong>Estado:</strong> {dados.state}</p>
