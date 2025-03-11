@@ -1,73 +1,72 @@
 import React, { useState } from "react";
+import "./style.css";
 
-const App = () => {
+function App() {
   const [cep, setCep] = useState("");
-  const [result, setResult] = useState(null);
+  const [dados, setDados] = useState(null);
+  const [erro, setErro] = useState("");
 
-  const handleSubmit = async (e) => {
+  const buscarCep = async (e) => {
     e.preventDefault();
+    setErro("");
+    setDados(null);
 
-    if (!cep || cep.length !== 8) {
-      alert("Insira um CEP válido com 8 dígitos.");
+    const cepFormatado = cep.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+    if (cepFormatado.length !== 8) {
+      setErro("O CEP deve ter 8 dígitos.");
       return;
     }
 
-    const url = `https://viacep.com.br/ws/${cep}/json/`;
-
     try {
-      const response = await fetch(url);
+      const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cepFormatado}`);
       const data = await response.json();
 
-      if (data.erro) {
-        setResult("CEP não encontrado.");
+      if (data.hasOwnProperty("erro")) {
+        setErro("CEP não encontrado.");
       } else {
-        setResult(
-          <div>
-            <p>
-              <strong>CEP:</strong> {data.cep}
-            </p>
-            <p>
-              <strong>Logradouro:</strong> {data.logradouro}
-            </p>
-            <p>
-              <strong>Bairro:</strong> {data.bairro}
-            </p>
-            <p>
-              <strong>Cidade:</strong> {data.localidade}
-            </p>
-            <p>
-              <strong>Estado:</strong> {data.uf}
-            </p>
-          </div>
-        );
+        setDados(data);
       }
-    } catch (error) {
-      setResult("Ocorreu um erro. Tente novamente.");
-      console.error("Erro:", error);
+    } catch {
+      setErro("Erro ao buscar o CEP. Tente novamente mais tarde.");
     }
   };
 
   return (
-    <div className="app">
-      <form id="cepForm" onSubmit={handleSubmit}>
-        <label htmlFor="cep">Digite o CEP:</label>
-        <input
-          type="text"
-          id="cep"
-          name="cep"
-          placeholder="Ex: 01001-000"
-          value={cep}
-          onChange={(e) => setCep(e.target.value)}
-          required
-        />
-        <button type="submit">Consultar</button>
-      </form>
+    <div>
+      <header>
+        <h1>PROJETO CEP</h1>
+      </header>
 
-      <div id="result" className="result">
-        {result}
+      <div className="container">
+        <main>
+          <form onSubmit={buscarCep}>
+            <input
+              type="text"
+              placeholder="Digite o CEP"
+              value={cep}
+              onChange={(e) => setCep(e.target.value)}
+              maxLength="9"
+              required
+            />
+            <button type="submit">Consultar</button>
+          </form>
+
+          {erro && <p className="erro">{erro}</p>}
+
+          {dados && (
+            <div className="resultado">
+              <p><strong>CEP:</strong> {dados.cep}</p>
+              <p><strong>Logradouro:</strong> {dados.street}</p>
+              <p><strong>Bairro:</strong> {dados.neighborhood}</p>
+              <p><strong>Cidade:</strong> {dados.city}</p>
+              <p><strong>Estado:</strong> {dados.state}</p>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
-};
+}
 
 export default App;
